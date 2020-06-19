@@ -6,15 +6,16 @@ source("data_processing.R")
 
 server <- function(input, output, session){
   
+  #### Notes####
   
-
-  
-  #### Notes ####
-  
-  # 1) need to adjust geom_() depending on selected indicator
-  # 2) need to adjust y argument for geom_() call depending on selected indicator
-  # 3) need to add argument to scale_y_continous for logistic scale 
-  
+    # Possible Improvements
+    # 1) Look at inconsistencies in cumulative data 
+    # (e.g. when later date cases/deaths lower than earlier dates)
+    # 2) Add tooltip to hover over plots and provide stats for specific dates (w/ shinyBS package?)
+    # 3) Develop deeper understanding reactivity to find ways to reduce code redundancy
+    # 4) Evaluate data_processing.R script to reduce load time
+    # 5) Adjust interdependent controls w/ update button (Maybe?)
+    # 6) Add loading spinner 
   
   #### Country by Continent Input ####
   
@@ -39,98 +40,80 @@ server <- function(input, output, session){
     # Save indicator input as reactive expression
     country_indicator <- reactive({input$indicator_country})
   
-
     #### Country Plots ####
-  
   
     output$cases_country <- renderPlot({
       
+               countries_plot <-  countries %>% 
+                                  filter(country == input$country)  %>% 
+                                  filter(cases > 0 ) %>% 
+                                  ggplot() +
+                                   theme_bw() +
+                                   main_theme +
+                                   xlab('') +
+                                   ylab('')
       
               if (country_indicator() == "New Cases/Deaths"){
                 
-                #Note: should I fill bars by weekend? 
-                
-                countries %>% 
-                  filter(country == input$country)  %>% 
-                  filter(new_cases > 0 ) %>%
-                  ggplot(aes(x=date, y=new_cases, fill = weekend)) +
-                  geom_col() +
-                  theme_bw() +
-                  main_theme +
-                  xlab('') +
-                  ylab('') + 
-                  labs(title = paste0(input$country, ": New Cases"),
-                       caption = "Source: Johns Hopkins")
-                
-                
-                
-                
+                      # Countries New Cases Plot 
+                      countries_plot  +
+                        geom_col(aes(x=date, y=new_cases, fill = weekend)) +
+                        labs(title = paste0(input$country, ": New Cases"),
+                             caption = "Source: Johns Hopkins")
+                      
               } else if (country_indicator() == "Cumulative Cases/Deaths (Linear)"){
       
-                  countries %>%  
-                    filter(country == input$country,) %>% 
-                    filter(cases > 0) %>% 
-                    ggplot(aes(x=date, y=cases)) +
-                    geom_line() +
-                    geom_point() +
-                    scale_y_continuous(labels = scales::comma) +
-                    theme_bw() +
-                    main_theme + 
-                    labs(title = paste0(input$country, ": Cumulative Cases (Linear)"),
-                         caption = "Source: Johns Hopkins") 
+                      # Countries Cases Plot
+                      countries_plot + 
+                          geom_line(aes(x=date, y=cases)) +
+                          geom_point(aes(x=date, y=cases)) +
+                          scale_y_continuous(labels = scales::comma) +
+                          labs(title = paste0(input$country, ": Cumulative Cases (Linear)"),
+                               caption = "Source: Johns Hopkins") 
       
               } else if(country_indicator() ==  "Cumulative Cases/Deaths (Logistic)") {
                 
-      
-                
-                    countries %>%  
-                      filter(country == input$country) %>% 
-                      filter(cases > 0) %>% 
-                      ggplot(aes(x=date, y=cases)) +
-                      geom_line() +
-                      geom_point() +
-                      scale_y_log10(labels = scales::comma) +
-                      theme_bw() +
-                      main_theme + 
-                      labs(title = paste0(input$country, ": Cumulative Cases (Logistic)"),
-                           caption = "Source: Johns Hopkins") 
-                
-                
+                      # Countries Cases Plot
+                      countries_plot + 
+                      geom_line(aes(x=date, y=cases)) +
+                        geom_point(aes(x=date, y=cases)) + 
+                            scale_y_log10(labels = scales::comma) +
+                            theme_bw() +
+                            main_theme + 
+                            labs(title = paste0(input$country, ": Cumulative Cases (Logistic)"),
+                                 caption = "Source: Johns Hopkins") 
               }
-        
-
     }) 
   
     output$deaths_country <- renderPlot({
+      
+                    countries_plot <-  countries %>% 
+                      filter(country == input$country)  %>% 
+                      filter(cases > 0 ) %>% 
+                      ggplot() +
+                      theme_bw() +
+                      main_theme +
+                      xlab('') +
+                      ylab('')
     
       if (country_indicator() == "New Cases/Deaths"){
-        
-        countries %>% 
-          filter(country == input$country)  %>% 
-          filter(new_cases > 0) %>% 
-          ggplot(aes(x=date, y=new_deaths, fill = weekend)) +
-          geom_col() +
-          theme_bw() +
-          main_theme +
-          xlab('') +
-          ylab('') + 
-          labs(title = paste0(input$country, ": New Deaths"),
-               caption = "Source: Johns Hopkins")
+                    
+                    # Country Cases Plot 
+                    countries_plot +
+                      geom_col(aes(x=date, y=new_deaths, fill = weekend)) +
+                      labs(title = paste0(input$country, ": New Deaths"),
+                           caption = "Source: Johns Hopkins")
         
         
       } else if (country_indicator() == "Cumulative Cases/Deaths (Linear)"){
         
-        countries %>%  
-          filter(country == input$country,) %>% 
-          filter(cases > 0) %>% 
-          ggplot(aes(x=date, y=deaths)) +
-          geom_line() +
-          geom_point() +
-          scale_y_continuous(labels = scales::comma) +
-          theme_bw() +
-          main_theme + 
-          labs(title = paste0(input$country, ": Cumulative Deaths (Linear)"),
-               caption = "Source: Johns Hopkins") 
+                  # Country Deaths Plot 
+                  countries_plot  +
+                      geom_line(aes(x=date, y=deaths)) +
+                      geom_point(aes(x=date, y=deaths)) +
+                      scale_y_continuous(labels = scales::comma) +
+                      labs(title = paste0(input$country, ": Cumulative Deaths (Linear)"),
+                           caption = "Source: Johns Hopkins") 
         
       } else if(country_indicator() ==  "Cumulative Cases/Deaths (Logistic)") {
         
@@ -164,116 +147,97 @@ server <- function(input, output, session){
   
         output$state_cases <- renderPlot({
           
-                         
+                     states_plot <- states %>% 
+                                      filter(state == input$state)  %>% 
+                                     #filter(!is.na(new_cases)) %>%#
+                                      ggplot() +
+                                         theme_bw() +
+                                         main_theme +
+                                         xlab('') +
+                                         ylab('') 
+                    
                           if(state_indicator() == "New Cases/Deaths"){
                             
-                            states %>% 
-                              filter(state == input$state)  %>% 
-                              filter(!is.na(new_cases)) %>%
-                              ggplot(aes(x=date, y=new_cases, fill = weekend)) +
-                              geom_col() +
-                              theme_bw() +
-                              main_theme +
-                              xlab('') +
-                              ylab('') + 
-                              labs(title = paste0(input$state, ": New Cases"),
-                                   caption = "Source: New York Times")
-                            
+                                  states_plot + 
+                                      geom_col(aes(x=date, y=new_cases, fill = weekend)) +
+                                      labs(title = paste0(input$state, ": New Cases"),
+                                          caption = "Source: New York Times")
+                                
                             
                           } else if(state_indicator() == "Cumulative Cases/Deaths (Linear)"){
                             
-                            #Note: Not sure if I should filter out dates before first case
-                            states %>% 
-                              filter(state == input$state)  %>% 
-                              filter(cases > 0 ) %>%
-                              ggplot(aes(x=date, y=cases)) +
-                              geom_line() +
-                              geom_point() +
-                              scale_y_continuous(labels = scales::comma) +
-                              theme_bw() +
-                              main_theme +
-                              xlab('') +
-                              ylab('') +
-                              labs(title = paste0(input$state, ": Cumulative Cases (Linear)"),
-                                   caption = "Source: New York Times")
-                            
+                                #Note: Not sure if I should filter out dates before first case
+                                states_plot +
+                                  geom_line(aes(x=date, y=cases)) +
+                                  geom_point(aes(x=date, y=cases)) +
+                                  scale_y_continuous(labels = scales::comma) +
+                                  labs(title = paste0(input$state, ": Cumulative Cases (Linear)"),
+                                       caption = "Source: New York Times")
+                                
                             
                           } else if(state_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
                             
-                            states %>% 
-                              filter(state == input$state)  %>% 
-                              filter(cases > 0) %>% 
-                              ggplot(aes(x=date, y=cases)) +
-                              geom_line() +
-                              geom_point() +
-                              scale_y_log10(labels = scales::comma) + 
-                              theme_bw() +
-                              main_theme +
-                              xlab('') +
-                              ylab('') +
-                              labs(title = paste0(input$state, ": Cumulative Cases (Logistic)"),
-                                   caption = "Source: New York Times")
-                            
+                                  states_plot +
+                                    geom_line(aes(x=date, y=cases)) +
+                                    geom_point(aes(x=date, y=cases)) +
+                                    scale_y_log10(labels = scales::comma) + 
+                                    labs(title = paste0(input$state, ": Cumulative Cases (Logistic)"),
+                                         caption = "Source: New York Times")
                           }
                         
         })
         
         output$state_deaths <- renderPlot({
           
+                        #Note: this may be redundant
+                        states_plot <- states %>% 
+                          filter(state == input$state)  %>% 
+                          ggplot() +
+                          theme_bw() +
+                          main_theme +
+                          xlab('') +
+                          ylab('') 
+          
                   if (state_indicator() ==  "New Cases/Deaths") {
                     
-                      states %>% 
-                        filter(state == input$state)  %>% 
-                        filter(!is.na(new_cases)) %>%
-                        ggplot(aes(x=date, y=new_cases, fill = weekend)) +
-                        geom_col() +
-                        theme_bw() +
-                        main_theme +
-                        xlab('') +
-                        ylab('') + 
+                        states_plot +
+                        geom_col(aes(x=date, y=new_cases, fill = weekend)) +
                         labs(title = paste0(input$state, ": New Deaths"),
                              caption = "Source: New York Times")
                     
                     
                   } else if(state_indicator()==  "Cumulative Cases/Deaths (Linear)") {
 
-                        states %>% 
-                          filter(state == input$state)  %>% 
-                          ggplot(aes(x=date, y=deaths)) +
-                          geom_line() +
-                          geom_point() +
+                      states_plot +
+                          geom_line(aes(x=date, y=deaths)) +
+                          geom_point(aes(x=date, y=deaths)) +
                           scale_y_continuous(labels = scales::comma) +
-                          theme_bw() +
-                          main_theme +
-                          xlab('') + 
-                          ylab('') + 
                           labs(title = paste0(input$state, ": Cumulative Deaths (Linear)"),
                                caption = "Source: New York Times")
                       
                   } else if(state_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
                     
+                        # Note: Use different code in order to keep x-axis limits same as cases plot
+                        #Create vector to scale dates on x-axis
+                        date_vec <- states %>%  
+                          filter(state == input$state, 
+                                 cases > 0) %>% 
+                          pull(date)
                     
-                    
-                    #Create vector to scale dates on x-axis
-                    date_vec <- states %>%  
-                      filter(state == input$state, 
-                             cases > 0) %>% 
-                      pull(date)
-                    
-                    states %>% 
-                      filter(state == input$state)  %>% 
-                      filter(deaths > 0) %>% 
-                      ggplot(aes(x=date, y=deaths)) +
-                      geom_line() +
-                      geom_point() +
-                      scale_x_date(limits = c(min(date_vec), max(date_vec))) +
-                      scale_y_log10(labels = scales::comma) + 
-                      theme_bw() +
-                      main_theme +                
-                      xlab('') +
-                      ylab('') + 
-                      labs(title = paste0(input$state, ": Cumulative Deaths (Logistic)"),
-                           caption = "Source: New York Times")
+                        states %>% 
+                          filter(state == input$state)  %>% 
+                          filter(deaths > 0) %>% 
+                          ggplot(aes(x=date, y=deaths)) +
+                          geom_line() +
+                          geom_point() +
+                          scale_x_date(limits = c(min(date_vec), max(date_vec))) +
+                          scale_y_log10(labels = scales::comma) + 
+                          theme_bw() +
+                          main_theme +                
+                          xlab('') +
+                          ylab('') + 
+                          labs(title = paste0(input$state, ": Cumulative Deaths (Logistic)"),
+                               caption = "Source: New York Times")
                     
                   }
                   
@@ -296,98 +260,80 @@ server <- function(input, output, session){
         )
         
         
-        
-        
-        
         county_indicator <-reactive({input$indicator_county})
         
         output$county_cases <- renderPlot({
           
           
+          counties_plot <- counties %>% 
+                            filter(county == input$county, state== input$state_filter)  %>% 
+                            ggplot() +
+                              theme_bw() +
+                              main_theme +
+                              xlab('') +
+                              ylab('')
+          
           if(county_indicator() == "New Cases/Deaths"){
-            
-            counties %>% 
-              filter(county == input$county, state== input$state_filter)  %>% 
-              filter(!is.na(new_cases)) %>%
-              ggplot(aes(x=date, y=new_cases, fill = weekend)) +
-              geom_col() +
-              theme_bw() +
-              main_theme +
-              xlab('') +
-              ylab('') + 
-              labs(title = paste0(input$county, ": New Cases"),
-                   caption = "Source: New York Times")
+    
+                          counties_plot +
+                            geom_col(aes(x=date, y=new_cases, fill = weekend)) +
+                            labs(title = paste0(input$county, ": New Cases"),
+                                 caption = "Source: New York Times")
             
             
           } else if(county_indicator() == "Cumulative Cases/Deaths (Linear)"){
             
-            #Note: Not sure if I should filter out dates before first case
-            counties %>% 
-              filter(county == input$county, state== input$state_filter)  %>% 
-              filter(cases > 0 ) %>%
-              ggplot(aes(x=date, y=cases)) +
-              geom_line() +
-              geom_point() +
-              scale_y_continuous(labels = scales::comma) +
-              theme_bw() +
-              main_theme +
-              xlab('') +
-              ylab('') +
-              labs(title = paste0(input$county, ": Cumulative Cases (Linear)"),
-                   caption = "Source: New York Times")
+                    # County Cases 
+                    counties_plot +
+                      geom_line(aes(x=date, y=cases)) +
+                      geom_point(aes(x=date, y=cases)) +
+                      scale_y_continuous(labels = scales::comma) +
+                      labs(title = paste0(input$county, ": Cumulative Cases (Linear)"),
+                           caption = "Source: New York Times")
             
             
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
             
-            counties %>% 
-              filter(county == input$county, state== input$state_filter)  %>% 
-              filter(cases > 0) %>% 
-              ggplot(aes(x=date, y=cases)) +
-              geom_line() +
-              geom_point() +
-              scale_y_log10(labels = scales::comma) + 
-              theme_bw() +
-              main_theme +
-              xlab('') +
-              ylab('') +
-              labs(title = paste0(input$county, ": Cumulative Cases (Logistic)"),
-                   caption = "Source: New York Times")
+                    counties_plot +
+                      geom_line(aes(x=date, y=cases)) +
+                      geom_point(aes(x=date, y=cases)) +
+                      scale_y_log10(labels = scales::comma) + 
+                      labs(title = paste0(input$county, ": Cumulative Cases (Logistic)"),
+                           caption = "Source: New York Times")
             
           }
-          
         })
         
         output$county_deaths <- renderPlot({
           
+                #Note: May be Redundant
+                counties_plot <- counties %>% 
+                  filter(county == input$county, state== input$state_filter)  %>% 
+                  ggplot() +
+                  theme_bw() +
+                  main_theme +
+                  xlab('') +
+                  ylab('')
+          
           if (county_indicator() ==  "New Cases/Deaths") {
             
-            counties %>% 
-              filter(county == input$county, state== input$state_filter)  %>% 
-              filter(!is.na(new_cases)) %>%
-              ggplot(aes(x=date, y=new_cases, fill = weekend)) +
-              geom_col() +
-              theme_bw() +
-              main_theme +
-              xlab('') +
-              ylab('') + 
-              labs(title = paste0(input$county, ": New Deaths"),
-                   caption = "Source: New York Times")
-            
+                  #New County Deaths 
+                  counties_plot +
+                    geom_col(aes(x=date, y=new_deaths, fill = weekend)) +
+                    labs(title = paste0(input$county, ": New Deaths"),
+                         caption = "Source: New York Times")
+                  
             
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Linear)") {
             
-            counties %>% 
-              filter(county == input$county, state== input$state_filter)  %>% 
-              ggplot(aes(x=date, y=deaths)) +
-              geom_line() +
-              geom_point() +
-              scale_y_continuous(labels = scales::comma) +
-              theme_bw() +
-              main_theme +
-              xlab('') + 
-              ylab('') + 
-              labs(title = paste0(input$county, ": Cumulative Deaths (Linear)"),
-                   caption = "Source: New York Times")
+                    
+                    # County Deaths
+                    counties_plot +
+                      geom_line(aes(x=date, y=deaths)) +
+                      geom_point(aes(x=date, y=deaths)) +
+                      scale_y_continuous(labels = scales::comma) +
+                      labs(title = paste0(input$county, ": Cumulative Daths (Linear)"),
+                           caption = "Source: New York Times")
             
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
             
@@ -410,9 +356,6 @@ server <- function(input, output, session){
               ylab('') + 
               labs(title = paste0(input$county, ": Cumulative Deaths (Logistic)"),
                    caption = "Source: New York Times")
-            
           }
-          
         })
-
 }

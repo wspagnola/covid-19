@@ -97,7 +97,6 @@ countries <- full_long_clean %>%
 
 countries <- countries[!is.na(countries$continent) ,]
 
-
 # Create new cases new deaths variables
 countries <-countries %>% 
               arrange(country, date) %>% 
@@ -113,11 +112,8 @@ countries <- countries  %>%
                         weekend = as.factor(weekend)) %>% 
                   rename(code = code_3)
 
-
-           
 # Clean Environment
-rm(full_long, state_data, cases_long, confirmed_cases, continents,
-continents_clean, deaths, deaths_long, full_long_clean)
+rm(full_long, state_data, cases_long, confirmed_cases, continents_clean, deaths, deaths_long, full_long_clean)
 
 
 #### Local ####
@@ -146,9 +142,9 @@ counties <- county_data %>%
                          weekend = as.factor(weekend)
  )
 
-
+rm(county_data)
+   
 #### Themes ####
-
 
 main_theme <- theme(legend.title = element_blank(),
                     panel.grid.major.x = element_blank(),
