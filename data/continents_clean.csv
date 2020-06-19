@@ -1,0 +1,250 @@
+country,continent,code_3
+Afghanistan,Asia,AFG
+�land Islands,Europe,ALA
+Albania,Europe,ALB
+Algeria,Africa,DZA
+American Samoa,Oceania,ASM
+Andorra,Europe,AND
+Angola,Africa,AGO
+Anguilla,Americas,AIA
+Antarctica,NA,ATA
+Antigua and Barbuda,Americas,ATG
+Argentina,Americas,ARG
+Armenia,Asia,ARM
+Aruba,Americas,ABW
+Australia,Oceania,AUS
+Austria,Europe,AUT
+Azerbaijan,Asia,AZE
+Bahamas,Americas,BHS
+Bahrain,Asia,BHR
+Bangladesh,Asia,BGD
+Barbados,Americas,BRB
+Belarus,Europe,BLR
+Belgium,Europe,BEL
+Belize,Americas,BLZ
+Benin,Africa,BEN
+Bermuda,Americas,BMU
+Bhutan,Asia,BTN
+Bolivia,Americas,BOL
+Bonaire,Americas,BES
+Bosnia and Herzegovina,Europe,BIH
+Botswana,Africa,BWA
+Bouvet Island,NA,BVT
+Brazil,Americas,BRA
+British Indian Ocean Territory,NA,IOT
+Brunei,Asia,BRN
+Bulgaria,Europe,BGR
+Burkina Faso,Africa,BFA
+Burundi,Africa,BDI
+Cambodia,Asia,KHM
+Cameroon,Africa,CMR
+Canada,Americas,CAN
+Cabo Verde,Africa,CPV
+Cayman Islands,Americas,CYM
+Central African Republic,Africa,CAF
+Chad,Africa,TCD
+Chile,Americas,CHL
+China,Asia,CHN
+Christmas Island,NA,CXR
+Cocos,NA,CCK
+Colombia,Americas,COL
+Comoros,Africa,COM
+Congo,Africa,COG
+Democratic Republic of the Congo,Africa,COD
+Cook Islands,Oceania,COK
+Costa Rica,Americas,CRI
+Cote d'Ivoire,Africa,CIV
+Croatia,Europe,HRV
+Cuba,Americas,CUB
+Cura�ao,Americas,CUW
+Cyprus,Asia,CYP
+Czech Republic,Europe,CZE
+Denmark,Europe,DNK
+Djibouti,Africa,DJI
+Dominica,Americas,DMA
+Dominican Republic,Americas,DOM
+Ecuador,Americas,ECU
+Egypt,Africa,EGY
+El Salvador,Americas,SLV
+Equatorial Guinea,Africa,GNQ
+Eritrea,Africa,ERI
+Estonia,Europe,EST
+Ethiopia,Africa,ETH
+Falkland Islands,Americas,FLK
+Faroe Islands,Europe,FRO
+Fiji,Oceania,FJI
+Finland,Europe,FIN
+France,Europe,FRA
+French Guiana,Americas,GUF
+French Polynesia,Oceania,PYF
+French Southern Territories,NA,ATF
+Gabon,Africa,GAB
+Gambia,Africa,GMB
+Georgia,Asia,GEO
+Germany,Europe,DEU
+Ghana,Africa,GHA
+Gibraltar,Europe,GIB
+Greece,Europe,GRC
+Greenland,Americas,GRL
+Grenada,Americas,GRD
+Guadeloupe,Americas,GLP
+Guam,Oceania,GUM
+Guatemala,Americas,GTM
+Guernsey,Europe,GGY
+Guinea,Africa,GIN
+Guinea-Bissau,Africa,GNB
+Guyana,Americas,GUY
+Haiti,Americas,HTI
+Heard Island and McDonald Islands,NA,HMD
+Holy See,Europe,VAT
+Honduras,Americas,HND
+Hong Kong,Asia,HKG
+Hungary,Europe,HUN
+Iceland,Europe,ISL
+India,Asia,IND
+Indonesia,Asia,IDN
+Iran,Asia,IRN
+Iraq,Asia,IRQ
+Ireland,Europe,IRL
+Isle of Man,Europe,IMN
+Israel,Asia,ISR
+Italy,Europe,ITA
+Jamaica,Americas,JAM
+Japan,Asia,JPN
+Jersey,Europe,JEY
+Jordan,Asia,JOR
+Kazakhstan,Asia,KAZ
+Kenya,Africa,KEN
+Kiribati,Oceania,KIR
+Korea,Asia,PRK
+South Korea,Asia,KOR
+Kuwait,Asia,KWT
+Kyrgyzstan,Asia,KGZ
+Laos,Asia,LAO
+Latvia,Europe,LVA
+Lebanon,Asia,LBN
+Lesotho,Africa,LSO
+Liberia,Africa,LBR
+Libya,Africa,LBY
+Liechtenstein,Europe,LIE
+Lithuania,Europe,LTU
+Luxembourg,Europe,LUX
+Macao,Asia,MAC
+Macedonia,Europe,MKD
+Madagascar,Africa,MDG
+Malawi,Africa,MWI
+Malaysia,Asia,MYS
+Maldives,Asia,MDV
+Mali,Africa,MLI
+Malta,Europe,MLT
+Marshall Islands,Oceania,MHL
+Martinique,Americas,MTQ
+Mauritania,Africa,MRT
+Mauritius,Africa,MUS
+Mayotte,Africa,MYT
+Mexico,Americas,MEX
+Micronesia,Oceania,FSM
+Moldova,Europe,MDA
+Monaco,Europe,MCO
+Mongolia,Asia,MNG
+Montenegro,Europe,MNE
+Montserrat,Americas,MSR
+Morocco,Africa,MAR
+Mozambique,Africa,MOZ
+Myanmar,Asia,MMR
+Namibia,Africa,NAM
+Nauru,Oceania,NRU
+Nepal,Asia,NPL
+Netherlands,Europe,NLD
+New Caledonia,Oceania,NCL
+New Zealand,Oceania,NZL
+Nicaragua,Americas,NIC
+Niger,Africa,NER
+Nigeria,Africa,NGA
+Niue,Oceania,NIU
+Norfolk Island,Oceania,NFK
+Northern Mariana Islands,Oceania,MNP
+Norway,Europe,NOR
+Oman,Asia,OMN
+Pakistan,Asia,PAK
+Palau,Oceania,PLW
+Palestine,Asia,PSE
+Panama,Americas,PAN
+Papua New Guinea,Oceania,PNG
+Paraguay,Americas,PRY
+Peru,Americas,PER
+Philippines,Asia,PHL
+Pitcairn,Oceania,PCN
+Poland,Europe,POL
+Portugal,Europe,PRT
+Puerto Rico,Americas,PRI
+Qatar,Asia,QAT
+R�union,Africa,REU
+Romania,Europe,ROU
+Russia,Europe,RUS
+Rwanda,Africa,RWA
+Saint Barth�lemy,Americas,BLM
+Saint Helena,Africa,SHN
+Saint Kitts and Nevis,Americas,KNA
+Saint Lucia,Americas,LCA
+Saint Martin,Americas,MAF
+Saint Pierre and Miquelon,Americas,SPM
+Saint Vincent and the Grenadines,Americas,VCT
+Samoa,Oceania,WSM
+San Marino,Europe,SMR
+Sao Tome and Principe,Africa,STP
+Saudi Arabia,Asia,SAU
+Senegal,Africa,SEN
+Serbia,Europe,SRB
+Seychelles,Africa,SYC
+Sierra Leone,Africa,SLE
+Singapore,Asia,SGP
+Sint Maarten,Americas,SXM
+Slovakia,Europe,SVK
+Slovenia,Europe,SVN
+Solomon Islands,Oceania,SLB
+Somalia,Africa,SOM
+South Africa,Africa,ZAF
+South Georgia and the South Sandwich Islands,NA,SGS
+South Sudan,Africa,SSD
+Spain,Europe,ESP
+Sri Lanka,Asia,LKA
+Sudan,Africa,SDN
+Suriname,Americas,SUR
+Svalbard and Jan Mayen,Europe,SJM
+Swaziland,Africa,SWZ
+Sweden,Europe,SWE
+Switzerland,Europe,CHE
+Syria,Asia,SYR
+Taiwan,Asia,TWN
+Tajikistan,Asia,TJK
+Tanzania,Africa,TZA
+Thailand,Asia,THA
+Timor-Leste,Asia,TLS
+Togo,Africa,TGO
+Tokelau,Oceania,TKL
+Tonga,Oceania,TON
+Trinidad and Tobago,Americas,TTO
+Tunisia,Africa,TUN
+Turkey,Asia,TUR
+Turkmenistan,Asia,TKM
+Turks and Caicos Islands,Americas,TCA
+Tuvalu,Oceania,TUV
+Uganda,Africa,UGA
+Ukraine,Europe,UKR
+United Arab Emirates,Asia,ARE
+United Kingdom,Europe,GBR
+United States of America,Americas,USA
+United States Minor Outlying Islands,NA,UMI
+Uruguay,Americas,URY
+Uzbekistan,Asia,UZB
+Vanuatu,Oceania,VUT
+Venezuela,Americas,VEN
+Vietnam,Asia,VNM
+Virgin Islands,Americas,VGB
+Virgin Islands,Americas,VIR
+Wallis and Futuna,Oceania,WLF
+Western Sahara,Africa,ESH
+Yemen,Asia,YEM
+Zambia,Africa,ZMB
+Zimbabwe,Africa,ZWE

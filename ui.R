@@ -51,11 +51,28 @@ navbarPage(
             plotOutput("state_deaths")
         
     ),
-  tabPanel("Counties"
-           
-           
-  ), 
   
+  tabPanel("Counties",
+      fluidPage(fluidRow(
+            column(selectInput('state_filter',
+                                label = 'State',
+                                choices = NULL),
+                  width = 4),
+            column(selectInput('county',
+                              label = 'County',
+                              choices = NULL),
+                   width = 4),
+            column(selectInput('indicator_county',
+                               label = 'Select Indicator',
+                               choices = c("New Cases/Deaths",
+                                           "Cumulative Cases/Deaths (Linear)",
+                                           "Cumulative Cases/Deaths (Logistic)")),
+                   width = 4)
+      )), 
+    plotOutput("county_cases"),
+    plotOutput("county_deaths")
+  ),
+
   collapsible = TRUE
   
 )

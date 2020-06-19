@@ -1,7 +1,8 @@
 
+library(tidyverse)
 # Note replace NA new_cases with 1?
 
-#### States: Load Data ####
+#### States  ####
 
 url <- 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv'
 
@@ -23,9 +24,9 @@ states <- states %>%
                    weekend = as.factor(weekend)
 )
 
+
 #### Countries ####
 
-#### Load Date ####
 
 #Load cases
 url <-'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
@@ -70,31 +71,6 @@ full_long <- cases_long %>%
 #Note: Not sure about this structure
 #full_long_long <- full_long %>% gather(key, value, cases:deaths) 
 
-#Continents/Country Dataset
-#https://www.kaggle.com/statchaitya/country-to-continent/data#
-
-continents <- read_csv('data/continents_countries.csv')
-continents <- continents  %>% select(country, continent, code_3)
-
-continents_clean <- continents %>% 
-              mutate(country = 
-                case_when(country == 'Korea (Republic of)' ~ 'South Korea',
-                          country == 'Russian Federation' ~ "Russia",
-                          country =='Viet Nam' ~ 'Vietnam',
-                          country ==  'US' ~ 'United States of America',
-                          country == 'United Kingdom of Great Britain and Northern Ireland' ~ 'United Kingdom',
-                          country == 'Brunei Darussalam' ~ 'Brunei',
-                          country ==  "Congo (Democratic Republic of the)" ~ 'Democratic Republic of the Congo',   
-                          country == "Syrian Arab Republic" ~ "Syria",
-                          country == "Lao People's Democratic Republic" ~ 'Laos', 
-                          str_detect(country, "Ivoire") == T ~ "Cote d'Ivoire",
-                          
-                          TRUE ~ country)) %>% 
-              mutate( country = str_remove(country, " \\(.*"),
-                      country = str_remove(country, "\\,.*"))
-
-
-
 full_long_clean <- full_long %>% 
                      mutate(country = str_remove(country, "\\*" )) %>% 
                      mutate( country = case_when(
@@ -106,20 +82,23 @@ full_long_clean <- full_long %>%
                      TRUE ~ country
 ))
 
+continents_clean <- read_csv('data/continents_clean.csv')
 
 countries <- full_long_clean %>% 
              left_join(continents_clean, by = c('country'))   
 
-unmatched_countries <- countries %>%  
-                          filter(is.na(continent)) %>% 
-                          select(country) %>%  
-                          unique %>% 
-                          pull
+
+#CHECK UNMATCHED COUNTRIES
+# unmatched_countries <- countries %>%  
+#                           filter(is.na(continent)) %>% 
+#                           select(country) %>%  
+#                           unique %>% 
+#                           pull
 
 countries <- countries[!is.na(countries$continent) ,]
 
 
-# Create new caes new deaths variables
+# Create new cases new deaths variables
 countries <-countries %>% 
               arrange(country, date) %>% 
               group_by(country) %>% 
@@ -139,6 +118,34 @@ countries <- countries  %>%
 # Clean Environment
 rm(full_long, state_data, cases_long, confirmed_cases, continents,
 continents_clean, deaths, deaths_long, full_long_clean)
+
+
+#### Local ####
+
+url <- 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv'
+
+county_data <- read_csv(url)
+
+
+#NOTE: Not sure what the deal is with "Unknown" counties
+county_data <- county_data %>% 
+                    filter(county != 'Unknown') %>% 
+                    arrange(state, county, date) %>% 
+                    group_by(state, county) %>% 
+                    mutate(new_cases= cases - lag(cases),
+                           new_deaths = deaths - lag(deaths)
+)
+
+
+#Recode NA from first date as equal to cumulative variable
+counties <- county_data %>% 
+                  mutate(new_cases = if_else(is.na(new_cases), cases, new_cases),
+                         new_deaths = if_else(is.na(new_deaths), deaths, new_deaths),
+                         weekdays = weekdays(date),
+                         weekend = ifelse(weekdays %in% c('Saturday', 'Sunday'), 'Weekend', "Weekday"),
+                         weekend = as.factor(weekend)
+ )
+
 
 #### Themes ####
 
