@@ -4,8 +4,11 @@ library(tidyverse)
 
 source("data_processing.R")
 
+
 server <- function(input, output, session){
   
+  
+
   #### Notes####
   
     # Possible Improvements
@@ -15,8 +18,7 @@ server <- function(input, output, session){
     # 3) Develop deeper understanding reactivity to find ways to reduce code redundancy
     # 4) Evaluate data_processing.R script to reduce load time
     # 5) Adjust interdependent controls w/ update button (Maybe?)
-    # 6) Add loading spinner 
-  
+
   #### Country by Continent Input ####
   
   #Code for Interdependent Selection borrowed from Charles Hadley LinkedIn Learning Chpt. 06 Ex. 03

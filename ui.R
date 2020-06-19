@@ -1,5 +1,6 @@
 library(shiny)
 library(tidyverse)
+library(shinycustomloader)
 
 source("data_processing.R")
 
@@ -26,8 +27,8 @@ navbarPage(
                                                "Cumulative Cases/Deaths (Logistic)")),
                        width = 4)
           )),
-           plotOutput("cases_country"),
-           plotOutput('deaths_country')
+           withLoader(plotOutput("cases_country")),
+           withLoader(plotOutput('deaths_country'))
     ),
  
   tabPanel("States",
@@ -47,8 +48,8 @@ navbarPage(
             )),
         
             #Note: make these generic
-            plotOutput("state_cases"),
-            plotOutput("state_deaths")
+            withLoader(plotOutput("state_cases")),
+            withLoader(plotOutput("state_deaths"))
         
     ),
   
@@ -69,8 +70,9 @@ navbarPage(
                                            "Cumulative Cases/Deaths (Logistic)")),
                    width = 4)
       )), 
-    plotOutput("county_cases"),
-    plotOutput("county_deaths")
+      
+    withLoader(plotOutput("county_cases")),
+    withLoader(plotOutput("county_deaths"))
   ),
 
   collapsible = TRUE
