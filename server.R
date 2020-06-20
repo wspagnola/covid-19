@@ -2,14 +2,13 @@ library(shiny)
 library(shinycustomloader)
 library(tidyverse)
 library(shinythemes)
+library(profvis)
 
 source("data_processing.R")
 
 
 server <- function(input, output, session){
   
-  
-
   #### Notes####
   
     # Possible Improvements
@@ -43,18 +42,21 @@ server <- function(input, output, session){
     # Save indicator input as reactive expression
     country_indicator <- reactive({input$indicator_country})
 
+    countries_react  <-  reactive({countries %>% 
+                                      filter(country == input$country)  %>% 
+                                      filter(cases > 0 ) %>% 
+                                      ggplot() +
+                                      theme_bw() +
+                                      main_theme +
+                                      xlab('') +
+                                      ylab('')
+    })
+    
     #### Country Plots ####
   
     output$cases_country <- renderPlot({
       
-               countries_plot <-  countries %>% 
-                                  filter(country == input$country)  %>% 
-                                  filter(cases > 0 ) %>% 
-                                  ggplot() +
-                                     theme_bw() +
-                                     main_theme +
-                                     xlab('') +
-                                     ylab('')
+              countries_plot <- countries_react()
       
               if (country_indicator() == "New Cases/Deaths"){
                 
@@ -90,15 +92,8 @@ server <- function(input, output, session){
   
     output$deaths_country <- renderPlot({
       
-                    countries_plot <-  countries %>% 
-                      filter(country == input$country)  %>% 
-                      filter(cases > 0 ) %>% 
-                      ggplot() +
-                      theme_bw() +
-                      main_theme +
-                      xlab('') +
-                      ylab('')
-    
+       countries_plot <- countries_react()
+      
       if (country_indicator() == "New Cases/Deaths"){
                     
                     # Country Cases Plot 
@@ -147,18 +142,20 @@ server <- function(input, output, session){
     #### State Plots ####
     
       state_indicator <-reactive({input$indicator_state})
+    
+      states_react <- reactive({  states %>% 
+                                    filter(state == input$state)  %>% 
+                                    ggplot() +
+                                    theme_bw() +
+                                    main_theme +
+                                    xlab('') +
+                                    ylab('') 
+      })
   
-        output$state_cases <- renderPlot({
-          
-                     states_plot <- states %>% 
-                                      filter(state == input$state)  %>% 
-                                     #filter(!is.na(new_cases)) %>%#
-                                      ggplot() +
-                                         theme_bw() +
-                                         main_theme +
-                                         xlab('') +
-                                         ylab('') 
-                    
+      output$state_cases <- renderPlot({
+        
+              states_plot <- states_react()
+        
                           if(state_indicator() == "New Cases/Deaths"){
                             
                                   states_plot + 
@@ -192,14 +189,7 @@ server <- function(input, output, session){
         
         output$state_deaths <- renderPlot({
           
-                        #Note: this may be redundant
-                        states_plot <- states %>% 
-                          filter(state == input$state)  %>% 
-                          ggplot() +
-                          theme_bw() +
-                          main_theme +
-                          xlab('') +
-                          ylab('') 
+                  states_plot <- states_react()
           
                   if (state_indicator() ==  "New Cases/Deaths") {
                     
@@ -249,7 +239,6 @@ server <- function(input, output, session){
         
         #### County Plots ####
         
-        
         updateSelectInput(session, 'state_filter', choices = unique(counties$state))
         
         observeEvent(c(input$state_filter),
@@ -265,18 +254,24 @@ server <- function(input, output, session){
         
         county_indicator <-reactive({input$indicator_county})
         
+        
+        county_react <- reactive({          
+                     counties_plot <- counties %>% 
+                                          filter(county == input$county, state== input$state_filter)  %>% 
+                                              ggplot() +
+                                              theme_bw() +
+                                              main_theme +
+                                              xlab('') +
+                                              ylab('')
+        })
+        
         output$county_cases <- renderPlot({
           
-          
-          counties_plot <- counties %>% 
-                            filter(county == input$county, state== input$state_filter)  %>% 
-                            ggplot() +
-                              theme_bw() +
-                              main_theme +
-                              xlab('') +
-                              ylab('')
+          counties_plot <- county_react()
           
           if(county_indicator() == "New Cases/Deaths"){
+            
+
     
                           counties_plot +
                             geom_col(aes(x=date, y=new_cases, fill = weekend)) +
@@ -309,14 +304,8 @@ server <- function(input, output, session){
         
         output$county_deaths <- renderPlot({
           
-                #Note: May be Redundant
-                counties_plot <- counties %>% 
-                  filter(county == input$county, state== input$state_filter)  %>% 
-                  ggplot() +
-                  theme_bw() +
-                  main_theme +
-                  xlab('') +
-                  ylab('')
+          #Note: May be Redundant
+          counties_plot <- county_react()
           
           if (county_indicator() ==  "New Cases/Deaths") {
             
@@ -326,16 +315,14 @@ server <- function(input, output, session){
                     labs(title = paste0(input$county, ": New Deaths"),
                          caption = "Source: New York Times")
                   
-            
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Linear)") {
             
-                    
                     # County Deaths
                     counties_plot +
                       geom_line(aes(x=date, y=deaths)) +
                       geom_point(aes(x=date, y=deaths)) +
                       scale_y_continuous(labels = scales::comma) +
-                      labs(title = paste0(input$county, ": Cumulative Daths (Linear)"),
+                      labs(title = paste0(input$county, ": Cumulative Deaths (Linear)"),
                            caption = "Source: New York Times")
             
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
@@ -362,3 +349,5 @@ server <- function(input, output, session){
           }
         })
 }
+
+#profvis(runApp())

@@ -2,6 +2,9 @@
 library(tidyverse)
 # Note replace NA new_cases with 1?
 
+
+start_time <- Sys.time()
+
 #### States  ####
 
 url <- 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv'
@@ -24,6 +27,8 @@ states <- states %>%
                    weekend = as.factor(weekend)
 )
 
+
+Sys.time() - start_time 
 
 #### Countries ####
 
@@ -115,6 +120,7 @@ countries <- countries  %>%
 # Clean Environment
 rm(full_long, state_data, cases_long, confirmed_cases, continents_clean, deaths, deaths_long, full_long_clean)
 
+Sys.time() - start_time 
 
 #### Local ####
 
@@ -144,6 +150,8 @@ counties <- county_data %>%
 
 rm(county_data)
    
+Sys.time() - start_time 
+
 #### Themes ####
 
 main_theme <- theme(legend.title = element_blank(),
