@@ -1,6 +1,7 @@
 library(shiny)
 library(shinycustomloader)
 library(tidyverse)
+library(shinythemes)
 
 source("data_processing.R")
 
@@ -41,7 +42,7 @@ server <- function(input, output, session){
   
     # Save indicator input as reactive expression
     country_indicator <- reactive({input$indicator_country})
-  
+
     #### Country Plots ####
   
     output$cases_country <- renderPlot({
@@ -50,10 +51,10 @@ server <- function(input, output, session){
                                   filter(country == input$country)  %>% 
                                   filter(cases > 0 ) %>% 
                                   ggplot() +
-                                   theme_bw() +
-                                   main_theme +
-                                   xlab('') +
-                                   ylab('')
+                                     theme_bw() +
+                                     main_theme +
+                                     xlab('') +
+                                     ylab('')
       
               if (country_indicator() == "New Cases/Deaths"){
                 

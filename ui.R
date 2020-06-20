@@ -1,14 +1,15 @@
 library(shiny)
-library(tidyverse)
 library(shinycustomloader)
+library(tidyverse)
+library(shinythemes)
+
 
 source("data_processing.R")
 
 navbarPage(
   
+  theme = shinytheme('flatly'),
   'COVID-19', 
-  
-  
   tabPanel("World",
            
            fluidPage(fluidRow(
