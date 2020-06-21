@@ -2,6 +2,7 @@ library(shiny)
 library(shinycustomloader)
 library(tidyverse)
 library(shinythemes)
+library(plotly)
 
 
 source("data_processing.R")
