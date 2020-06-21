@@ -28,8 +28,8 @@ navbarPage(
                                                "Cumulative Cases/Deaths (Logistic)")),
                        width = 4)
           )),
-           withLoader(plotOutput("cases_country")),
-           withLoader(plotOutput('deaths_country'))
+           withLoader(plotlyOutput("cases_country")),
+           withLoader(plotlyOutput('deaths_country'))
     ),
  
   tabPanel("States",
@@ -49,8 +49,8 @@ navbarPage(
             )),
         
             #Note: make these generic
-            withLoader(plotOutput("state_cases")),
-            withLoader(plotOutput("state_deaths"))
+            withLoader(plotlyOutput("state_cases")),
+            withLoader(plotlyOutput("state_deaths"))
         
     ),
   
@@ -72,8 +72,8 @@ navbarPage(
                    width = 4)
       )), 
       
-    withLoader(plotOutput("county_cases")),
-    withLoader(plotOutput("county_deaths"))
+    withLoader(plotlyOutput("county_cases")),
+    withLoader(plotlyOutput("county_deaths"))
   ),
 
   collapsible = TRUE

@@ -3,9 +3,9 @@ library(shinycustomloader)
 library(tidyverse)
 library(shinythemes)
 library(profvis)
+library(plotly)
 
 source("data_processing.R")
-
 
 server <- function(input, output, session){
   
@@ -54,17 +54,19 @@ server <- function(input, output, session){
     
     #### Country Plots ####
   
-    output$cases_country <- renderPlot({
+    output$cases_country <- renderPlotly({
       
               countries_plot <- countries_react()
       
+              ggplotly(
               if (country_indicator() == "New Cases/Deaths"){
                 
                       # Countries New Cases Plot 
-                      countries_plot  +
-                        geom_col(aes(x=date, y=new_cases, fill = weekend)) +
-                        labs(title = paste0(input$country, ": New Cases"),
-                             caption = "Source: Johns Hopkins")
+                        
+                          countries_plot +
+                                        geom_col(aes(x=date, y=new_cases, fill = weekend)) +
+                                        labs(title = paste0(input$country, ": New Cases"),
+                                             caption = "Source: Johns Hopkins") 
                       
               } else if (country_indicator() == "Cumulative Cases/Deaths (Linear)"){
       
@@ -79,39 +81,47 @@ server <- function(input, output, session){
               } else if(country_indicator() ==  "Cumulative Cases/Deaths (Logistic)") {
                 
                       # Countries Cases Plot
-                      countries_plot + 
+                      countries_plot  + 
                       geom_line(aes(x=date, y=cases)) +
                         geom_point(aes(x=date, y=cases)) + 
-                            scale_y_log10(labels = scales::comma) +
-                            theme_bw() +
-                            main_theme + 
-                            labs(title = paste0(input$country, ": Cumulative Cases (Logistic)"),
+                        scale_y_log10(labels = scales::comma) +
+                        theme_bw() +
+                        main_theme + 
+                        labs(title = paste0(input$country, ": Cumulative Cases (Logistic)"),
                                  caption = "Source: Johns Hopkins") 
               }
+            , tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
+    
     }) 
   
-    output$deaths_country <- renderPlot({
+    output$deaths_country <- renderPlotly({
       
        countries_plot <- countries_react()
       
       if (country_indicator() == "New Cases/Deaths"){
                     
-                    # Country Cases Plot 
+                    # Country Deaths Plot 
+                  ggplotly(
                     countries_plot +
                       geom_col(aes(x=date, y=new_deaths, fill = weekend)) +
                       labs(title = paste0(input$country, ": New Deaths"),
-                           caption = "Source: Johns Hopkins")
+                           caption = "Source: Johns Hopkins"),
+                    
+                    tooltip = c('x', 'y'))  %>% layout(hoverlabel=list(bgcolor="white")) 
         
         
       } else if (country_indicator() == "Cumulative Cases/Deaths (Linear)"){
         
                   # Country Deaths Plot 
-                  countries_plot  +
+                  ggplotly(
+                      countries_plot +
                       geom_line(aes(x=date, y=deaths)) +
                       geom_point(aes(x=date, y=deaths)) +
                       scale_y_continuous(labels = scales::comma) +
                       labs(title = paste0(input$country, ": Cumulative Deaths (Linear)"),
-                           caption = "Source: Johns Hopkins") 
+                           caption = "Source: Johns Hopkins") ,
+                      
+                      tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
         
       } else if(country_indicator() ==  "Cumulative Cases/Deaths (Logistic)") {
         
@@ -120,7 +130,7 @@ server <- function(input, output, session){
                         filter(country == input$country, 
                                cases > 0) %>% 
                         pull(date)
-     
+        ggplotly(
         countries %>%  
           filter(country == input$country,) %>% 
           filter(deaths > 0) %>% 
@@ -132,9 +142,9 @@ server <- function(input, output, session){
           theme_bw() +
           main_theme + 
           labs(title = paste0(input$country, ": Cumulative Deaths (Logistic)"),
-               caption = "Source: Johns Hopkins") 
+               caption = "Source: Johns Hopkins"),
         
-        
+        tooltip = c('x', 'y') ) %>% layout(hoverlabel=list(bgcolor="white")) 
       }
   }) 
   
@@ -152,61 +162,84 @@ server <- function(input, output, session){
                                     ylab('') 
       })
   
-      output$state_cases <- renderPlot({
+      output$state_cases <- renderPlotly({
         
               states_plot <- states_react()
         
                           if(state_indicator() == "New Cases/Deaths"){
                             
+                                ggplotly(
                                   states_plot + 
                                       geom_col(aes(x=date, y=new_cases, fill = weekend)) +
                                       labs(title = paste0(input$state, ": New Cases"),
-                                          caption = "Source: New York Times")
+                                          caption = "Source: New York Times"),
+                            
+                                  tooltip = c('x', 'y')
+                                ) %>% layout(hoverlabel=list(bgcolor="white")) 
+      
                                 
                             
                           } else if(state_indicator() == "Cumulative Cases/Deaths (Linear)"){
                             
-                                #Note: Not sure if I should filter out dates before first case
+                             ggplotly(
+                               
                                 states_plot +
                                   geom_line(aes(x=date, y=cases)) +
                                   geom_point(aes(x=date, y=cases)) +
                                   scale_y_continuous(labels = scales::comma) +
                                   labs(title = paste0(input$state, ": Cumulative Cases (Linear)"),
-                                       caption = "Source: New York Times")
+                                       caption = "Source: New York Times"),
+                                
+                                tooltip = c('x', 'y')
+                                
+                            ) %>% layout(hoverlabel=list(bgcolor="white")) 
+                            
                                 
                             
                           } else if(state_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
-                            
+                               
+                               ggplotly(
                                   states_plot +
                                     geom_line(aes(x=date, y=cases)) +
                                     geom_point(aes(x=date, y=cases)) +
                                     scale_y_log10(labels = scales::comma) + 
                                     labs(title = paste0(input$state, ": Cumulative Cases (Logistic)"),
-                                         caption = "Source: New York Times")
+                                         caption = "Source: New York Times"),
+                                  
+                                 tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
+                            
                           }
                         
         })
         
-        output$state_deaths <- renderPlot({
+        output$state_deaths <- renderPlotly({
           
                   states_plot <- states_react()
           
                   if (state_indicator() ==  "New Cases/Deaths") {
                     
+                    ggplotly(
+   
                         states_plot +
                         geom_col(aes(x=date, y=new_cases, fill = weekend)) +
                         labs(title = paste0(input$state, ": New Deaths"),
-                             caption = "Source: New York Times")
-                    
-                    
+                             caption = "Source: New York Times"),
+                        
+                      tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
+   
                   } else if(state_indicator()==  "Cumulative Cases/Deaths (Linear)") {
 
-                      states_plot +
-                          geom_line(aes(x=date, y=deaths)) +
-                          geom_point(aes(x=date, y=deaths)) +
-                          scale_y_continuous(labels = scales::comma) +
-                          labs(title = paste0(input$state, ": Cumulative Deaths (Linear)"),
-                               caption = "Source: New York Times")
+                      ggplotly(
+                        
+                        states_plot +
+                            geom_line(aes(x=date, y=deaths)) +
+                            geom_point(aes(x=date, y=deaths)) +
+                            scale_y_continuous(labels = scales::comma) +
+                            labs(title = paste0(input$state, ": Cumulative Deaths (Linear)"),
+                                 caption = "Source: New York Times"),
+                      
+                        tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
+                    
                       
                   } else if(state_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
                     
@@ -217,20 +250,24 @@ server <- function(input, output, session){
                                  cases > 0) %>% 
                           pull(date)
                     
-                        states %>% 
-                          filter(state == input$state)  %>% 
-                          filter(deaths > 0) %>% 
-                          ggplot(aes(x=date, y=deaths)) +
-                          geom_line() +
-                          geom_point() +
-                          scale_x_date(limits = c(min(date_vec), max(date_vec))) +
-                          scale_y_log10(labels = scales::comma) + 
-                          theme_bw() +
-                          main_theme +                
-                          xlab('') +
-                          ylab('') + 
-                          labs(title = paste0(input$state, ": Cumulative Deaths (Logistic)"),
-                               caption = "Source: New York Times")
+                        ggplotly(
+                          states %>% 
+                            filter(state == input$state)  %>% 
+                            filter(deaths > 0) %>% 
+                            ggplot(aes(x=date, y=deaths)) +
+                            geom_line() +
+                            geom_point() +
+                            scale_x_date(limits = c(min(date_vec), max(date_vec))) +
+                            scale_y_log10(labels = scales::comma) + 
+                            theme_bw() +
+                            main_theme +                
+                            xlab('') +
+                            ylab('') + 
+                            labs(title = paste0(input$state, ": Cumulative Deaths (Logistic)"),
+                                 caption = "Source: New York Times"),
+                          
+                          tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
+                        
                     
                   }
                   
@@ -265,44 +302,56 @@ server <- function(input, output, session){
                                               ylab('')
         })
         
-        output$county_cases <- renderPlot({
+        output$county_cases <- renderPlotly({
           
           counties_plot <- county_react()
           
           if(county_indicator() == "New Cases/Deaths"){
-            
-
+                  
+                        ggplotly(
     
                           counties_plot +
                             geom_col(aes(x=date, y=new_cases, fill = weekend)) +
                             labs(title = paste0(input$county, ": New Cases"),
-                                 caption = "Source: New York Times")
+                                 caption = "Source: New York Times"),
+                          
+                          tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
+            
             
             
           } else if(county_indicator() == "Cumulative Cases/Deaths (Linear)"){
             
                     # County Cases 
+                    ggplotly(
+                      
                     counties_plot +
                       geom_line(aes(x=date, y=cases)) +
                       geom_point(aes(x=date, y=cases)) +
                       scale_y_continuous(labels = scales::comma) +
                       labs(title = paste0(input$county, ": Cumulative Cases (Linear)"),
-                           caption = "Source: New York Times")
+                           caption = "Source: New York Times"),
+                    
+                    tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
+            
             
             
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
             
+                    ggplotly(
+                      
                     counties_plot +
                       geom_line(aes(x=date, y=cases)) +
                       geom_point(aes(x=date, y=cases)) +
                       scale_y_log10(labels = scales::comma) + 
                       labs(title = paste0(input$county, ": Cumulative Cases (Logistic)"),
-                           caption = "Source: New York Times")
+                           caption = "Source: New York Times"),
+                    
+                    tooltip = c('x', 'y')) %>% layout(hoverlabel=list(bgcolor="white")) 
             
           }
         })
         
-        output$county_deaths <- renderPlot({
+        output$county_deaths <- renderPlotly({
           
           #Note: May be Redundant
           counties_plot <- county_react()
@@ -310,20 +359,33 @@ server <- function(input, output, session){
           if (county_indicator() ==  "New Cases/Deaths") {
             
                   #New County Deaths 
-                  counties_plot +
-                    geom_col(aes(x=date, y=new_deaths, fill = weekend)) +
-                    labs(title = paste0(input$county, ": New Deaths"),
-                         caption = "Source: New York Times")
+                  ggplotly(
+                    
+                    counties_plot +
+                      geom_col(aes(x=date, y=new_deaths, fill = weekend)) +
+                      labs(title = paste0(input$county, ": New Deaths"),
+                           caption = "Source: New York Times"),
+                    
+                    tooltip = c('x', 'y')
+                    
+                ) %>% layout(hoverlabel=list(bgcolor="white")) 
+            
                   
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Linear)") {
             
                     # County Deaths
-                    counties_plot +
-                      geom_line(aes(x=date, y=deaths)) +
-                      geom_point(aes(x=date, y=deaths)) +
-                      scale_y_continuous(labels = scales::comma) +
-                      labs(title = paste0(input$county, ": Cumulative Deaths (Linear)"),
-                           caption = "Source: New York Times")
+                    ggplotly(
+                      
+                      counties_plot +
+                        geom_line(aes(x=date, y=deaths)) +
+                        geom_point(aes(x=date, y=deaths)) +
+                        scale_y_continuous(labels = scales::comma) +
+                        labs(title = paste0(input$county, ": Cumulative Deaths (Linear)"),
+                             caption = "Source: New York Times"),
+                      
+                       tooltip = c('x', 'y')
+                    ) %>% layout(hoverlabel=list(bgcolor="white")) 
+            
             
           } else if(county_indicator()==  "Cumulative Cases/Deaths (Logistic)") {
             
@@ -332,20 +394,25 @@ server <- function(input, output, session){
               filter(county == input$county, state== input$state_filter, cases > 0) %>% 
               pull(date)
             
-            counties %>% 
-              filter(county == input$county, state== input$state_filter)  %>% 
-              filter(deaths > 0) %>% 
-              ggplot(aes(x=date, y=deaths)) +
-              geom_line() +
-              geom_point() +
-              scale_x_date(limits = c(min(date_vec), max(date_vec))) +
-              scale_y_log10(labels = scales::comma) + 
-              theme_bw() +
-              main_theme +                
-              xlab('') +
-              ylab('') + 
-              labs(title = paste0(input$county, ": Cumulative Deaths (Logistic)"),
-                   caption = "Source: New York Times")
+            ggplotly(
+                counties %>% 
+                  filter(county == input$county, state== input$state_filter)  %>% 
+                  filter(deaths > 0) %>% 
+                  ggplot(aes(x=date, y=deaths)) +
+                  geom_line() +
+                  geom_point() +
+                  scale_x_date(limits = c(min(date_vec), max(date_vec))) +
+                  scale_y_log10(labels = scales::comma) + 
+                  theme_bw() +
+                  main_theme +                
+                  xlab('') +
+                  ylab('') + 
+                  labs(title = paste0(input$county, ": Cumulative Deaths (Logistic)"),
+                       caption = "Source: New York Times"),
+              
+                tooltip = c('x', 'y')
+            ) %>% layout(hoverlabel=list(bgcolor="white")) 
+            
           }
         })
 }
