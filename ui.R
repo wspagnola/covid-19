@@ -40,7 +40,12 @@ navbarPage(
 
           actionButton('update_country_chart', label = 'Update Chart', width = '100%'),
            withLoader(plotlyOutput("cases_country")),
-           withLoader(plotlyOutput('deaths_country'))
+           withLoader(plotlyOutput('deaths_country')),
+          
+          fluidPage(fluidRow(
+                    column(width=8),
+                    column('Data Source: Johns Hopkins University', width = 4))
+          )
     ),
  
   tabPanel("States",
@@ -68,9 +73,13 @@ navbarPage(
       )),
         
 
-            actionButton('update_state_chart', label = 'Update Chart', width = '100%'),
-            withLoader(plotlyOutput("state_cases")),
-            withLoader(plotlyOutput("state_deaths"))
+      actionButton('update_state_chart', label = 'Update Chart', width = '100%'),
+      withLoader(plotlyOutput("state_cases")),
+      withLoader(plotlyOutput("state_deaths")),
+      fluidPage(fluidRow(
+                          column(width=8),
+                          column('Data Source: New York Times', width = 4)
+      ))
         
     ),
   
@@ -101,7 +110,11 @@ navbarPage(
       
     actionButton('update_county_chart', label = 'Update Chart', width = '100%'), 
     withLoader(plotlyOutput("county_cases")),
-    withLoader(plotlyOutput("county_deaths"))
+    withLoader(plotlyOutput("county_deaths")),
+    fluidPage(fluidRow(
+      column(width=8),
+      column('Data Source: New York Times', width = 4)
+    ))
   ),
 
   collapsible = TRUE
