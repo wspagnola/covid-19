@@ -155,5 +155,8 @@ Sys.time() - start_time
 #### Themes ####
 
 main_theme <- theme(legend.title = element_blank(),
+                    legend.text = element_text(size = 8),
                     panel.grid.major.x = element_blank(),
-                    panel.grid.minor.x = element_blank()) 
+                    panel.grid.minor.x = element_blank(),
+) 
+
