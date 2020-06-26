@@ -507,7 +507,8 @@ server <- function(input, output, session){
         },
         
         tooltip = c('x', 'y')) %>% 
-        layout(hoverlabel=list(bgcolor="white"))  %>% 
+        layout(hoverlabel=list(bgcolor="white"),
+                  legend = list(orientation = "h", xanchor = "center", x = 0.5, y = -0.1)) %>%
         config(modeBarButtonsToRemove = remove_toolbar_vec, displaylogo = FALSE)
       })
       
@@ -548,7 +549,8 @@ server <- function(input, output, session){
           },
           
           tooltip = c('x', 'y')) %>%
-          layout(hoverlabel=list(bgcolor="white")) %>% 
+          layout(hoverlabel=list(bgcolor="white"),
+                 legend = list(orientation = "h", xanchor = "center", x = 0.5, y = -0.1)) %>%
           config(modeBarButtonsToRemove = remove_toolbar_vec, displaylogo = FALSE)
       })
 }
