@@ -338,7 +338,7 @@ server <- function(input, output, session){
 
                          #States: Cumulative New Deaths
                         states_plot +
-                        geom_col(aes(x=date, y=new_cases, fill = weekend)) +
+                        geom_col(aes(x=date, y=new_deaths, fill = weekend)) +
                         labs(title = paste0(isolate(input$state), ": New Deaths"),
                              caption = "Source: New York Times")
    
