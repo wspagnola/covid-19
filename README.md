@@ -1,5 +1,4 @@
-# Covid-19
-RShiny App for Visualizing Covid-19 Data
+# Interactive COVID-19 RShiny App
 
 ## Objective 
 1. Pulls case/fatality data from NY Times and Johns Hopkins and then graphs the data
